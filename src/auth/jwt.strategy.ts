@@ -2,26 +2,26 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { AuthService } from './auth.service';
-import { AuthGuard } from '@nestjs/passport';
-
-@Injectable()
-export class JwtAuthGuard extends AuthGuard('jwt') { }
+import { ConfigService } from '@nestjs/config';
 
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-    constructor(private authService: AuthService) {
+    constructor(
+        private authService: AuthService,
+        private configService: ConfigService,
+    ) {
         super({
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
             ignoreExpiration: false,
-            secretOrKey: 'yourSecretKey', // Use environment variable in production
+            secretOrKey: configService.get<string>('JWT_SECRET'),
         });
     }
 
     async validate(payload: any) {
-        const user = await this.authService.validateUser(payload.username);
+        const user = await this.authService.validateUser(payload.id, '');
         if (!user) {
-            throw new UnauthorizedException();
+            throw new UnauthorizedException('Invalid token');
         }
         return user;
     }
