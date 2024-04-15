@@ -1,29 +1,29 @@
-import { Module, MiddlewareConsumer, RequestMethod } from '@nestjs/common';
-import { APP_GUARD } from '@nestjs/core';
-import { JwtModule } from '@nestjs/jwt';
-import { JwtAuthGuard } from './auth/jwt-auth.guard';
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
+import { MoviesModule } from './movies/movies.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
     imports: [
-        AuthModule,
-        JwtModule.register({
-            secret: 'admin12',
-            signOptions: { expiresIn: '60m' },
+        ConfigModule.forRoot({
+            isGlobal: true,
+            envFilePath: '.env',
         }),
-    ],
-    providers: [
-        {
-            provide: APP_GUARD,
-            useClass: JwtAuthGuard,
-        },
+        TypeOrmModule.forRoot({
+            type: 'postgres',
+            host: process.env.POSTGRES_HOST,
+            port: parseInt(process.env.POSTGRES_PORT!, 10),
+            username: process.env.POSTGRES_USER,
+            password: process.env.POSTGRES_PASSWORD,
+            database: process.env.POSTGRES_DB,
+            entities: [__dirname + '/**/*.entity{.ts,.js}'],
+            synchronize: true,
+        }),
+        AuthModule,
+        MoviesModule,
+        UsersModule,
     ],
 })
-export class AppModule {
-    configure(consumer: MiddlewareConsumer) {
-        consumer
-            .apply(JwtAuthGuard)
-            .exclude({ path: 'auth/login', method: RequestMethod.POST })
-            .forRoutes('*');
-    }
-}
+export class AppModule { }
