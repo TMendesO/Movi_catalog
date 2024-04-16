@@ -1,22 +1,22 @@
 # Movie Catalog API
 
-API RESTful para gerenciar um catálogo de filmes.
+Esta API foi desenvolvida usando NestJS, TypeORM e PostgreSQL.
 
-## Pré-requisitos
+## Endpoints
 
-- Node.js
-- Docker
-- Docker Compose
+### Usuários
 
-## Instalação
+- `POST /users/register`: Registrar um novo usuário
+- `POST /users/login`: Fazer login
 
-```bash
-# Instalar as dependências
-npm install
+### Filmes
 
-# Iniciar o PostgreSQL e Redis com Docker Compose
-docker-compose up -d
-```
+- `GET /movies`: Listar todos os filmes
+- `GET /movies/:id`: Obter detalhes de um filme específico
+- `POST /movies`: Adicionar um novo filme
+- `PUT /movies/:id`: Atualizar um filme
+- `DELETE /movies/:id`: Excluir um filme
 
-## Observação:
-Em relação à minha experiência com as ferramentas mencionadas, comecei a estudar TypeScript há alguns meses, sendo esta a minha principal experiência com essa tecnologia até o momento. Quanto às outras tecnologias citadas, realizei estudos introdutórios antes de iniciar o projeto.
+## Experiência
+
+Comecei a estudar TypeScript há alguns meses e este projeto foi uma excelente oportunidade para aplicar meus conhecimentos. Aprender sobre NestJS, TypeORM e PostgreSQL foi desafiador, mas muito gratificante. Este projeto me deu uma boa compreensão de como criar uma API RESTful robusta usando estas tecnologias.
